@@ -1,6 +1,7 @@
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -13,6 +14,7 @@ public class Main extends Application {
 
     private TextField directoryPathField;
     private TextField searchField;
+    private TextArea resultArea;
 
     public static void main(String[] args) {
         launch(args);
@@ -35,10 +37,13 @@ public class Main extends Application {
         var searchButton = new Button();
         searchButton.setText("Search");
 
-        var hbox = new HBox(10, directoryPathField, browseButton);
-        var vbox = new VBox(10, hbox, searchField, searchButton);
+        resultArea = new TextArea();
+        resultArea.setPrefHeight(400);
 
-        var scene = new Scene(vbox, 600, 200);
+        var hbox = new HBox(10, directoryPathField, browseButton);
+        var vbox = new VBox(10, hbox, searchField, searchButton, resultArea);
+
+        var scene = new Scene(vbox, 600, 600);
         primaryStage.setScene(scene);
 
         primaryStage.show();
