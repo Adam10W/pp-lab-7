@@ -9,6 +9,8 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class Main extends Application {
 
@@ -36,6 +38,7 @@ public class Main extends Application {
 
         var searchButton = new Button();
         searchButton.setText("Search");
+        searchButton.setOnAction(event -> searchFiles());
 
         resultArea = new TextArea();
         resultArea.setPrefHeight(400);
@@ -55,6 +58,40 @@ public class Main extends Application {
 
         if (selectedDirectory != null) {
             directoryPathField.setText(selectedDirectory.getAbsolutePath());
+        }
+    }
+
+    private void searchFiles() {
+        String directoryPath = directoryPathField.getText();
+        if (directoryPath.isEmpty()) {
+            resultArea.setText("Please provide a directory path.");
+            return;
+        }
+
+        File directory = new File(directoryPath);
+        if (!directory.isDirectory()) {
+            resultArea.setText("The provided path is not a directory.");
+            return;
+        }
+
+        StringBuilder results = new StringBuilder();
+        listFilesInDirectory(directory, results);
+
+        resultArea.setText(results.toString());
+    }
+
+    private void listFilesInDirectory(File directory, StringBuilder results) {
+        File[] files = directory.listFiles();
+        if (files != null) {
+            Arrays.stream(files)
+                    .filter(Objects::nonNull)
+                    .forEach(file -> {
+                        if (file.isDirectory()) {
+                            listFilesInDirectory(file, results);
+                        } else {
+                            results.append(file.getAbsolutePath()).append("\n");
+                        }
+                    });
         }
     }
 }
